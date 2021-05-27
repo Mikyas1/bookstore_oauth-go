@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	headerXPublice  = "X-Public"
+	headerXPublic  = "X-Public"
 	headerXClientId = "X-Client-Id"
 	headerXCallerId = "X-User-Id"
 
@@ -36,7 +36,7 @@ func IsPublic(request *http.Request) bool {
 	if request == nil {
 		return true
 	}
-	return request.Header.Get(headerXPublice) == "true"
+	return request.Header.Get(headerXPublic) == "true"
 }
 
 func GetCallerId(request *http.Request) int64 {
@@ -75,6 +75,9 @@ func AuthenticateRequest(request *http.Request) *errors.RestError {
 
 	at, err := getAccessToken(accessToken)
 	if err != nil {
+		if err.Status == http.StatusNotFound {
+			return nil
+		}
 		return err
 	}
 
